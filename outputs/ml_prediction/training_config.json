@@ -1,0 +1,48 @@
+{
+  "dataset_url": "https://munichtechexpo.com/downloads/smart-cities-traffic-sensor-sample.csv",
+  "dataset_path": "C:\\Users\\aishw\\OneDrive\\Desktop\\FlowSense\\data\\smart-cities-traffic-sensor-sample.csv",
+  "target": "next vehicle_count_15min within each intersection_id/approach group",
+  "feature_columns": [
+    "vehicle_count_15min",
+    "queue_length_m",
+    "avg_speed_kmh",
+    "is_rush_hour",
+    "lane_count",
+    "vehicle_count_lag_15",
+    "vehicle_count_lag_30",
+    "vehicle_count_lag_45",
+    "hour",
+    "minute",
+    "day_of_week",
+    "intersection_id",
+    "approach",
+    "weather"
+  ],
+  "chronological_cutoff_timestamp": "2026-09-18T14:00:00+00:00",
+  "train_rows": 12816,
+  "test_rows": 3216,
+  "test_fraction_by_unique_timestamp": 0.2,
+  "gradient_boosting": {
+    "n_estimators": 200,
+    "learning_rate": 0.05,
+    "max_depth": 3,
+    "random_state": 42,
+    "loss": "squared_error"
+  },
+  "validation": {
+    "timestamp_is_utc_datetime": true,
+    "sorted_by_group_and_timestamp": true,
+    "series_count": 24,
+    "target_is_next_timestamp": true,
+    "lag_features_grouped": true,
+    "rows_before_dropna": 16128,
+    "rows_after_feature_creation_and_dropna": 16032,
+    "rows_removed_after_feature_creation": 96,
+    "train_test_split_chronological": true,
+    "train_rows": 12816,
+    "test_rows": 3216,
+    "cutoff_timestamp": "2026-09-18T14:00:00+00:00",
+    "train_max_timestamp": "2026-09-18T14:00:00+00:00",
+    "test_min_timestamp": "2026-09-18T14:15:00+00:00"
+  }
+}

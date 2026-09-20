@@ -1,0 +1,13 @@
+metric,value
+completed_trips,908.000000
+average_travel_time_sec,55.947137
+median_travel_time_sec,52.000000
+p95_travel_time_sec,86.000000
+average_waiting_time_sec,12.151982
+median_waiting_time_sec,3.000000
+p95_waiting_time_sec,41.000000
+average_time_loss_sec,18.388436
+average_stops,0.528634
+maximum_waiting_time_sec,46.000000
+maximum_travel_time_sec,100.000000
+throughput_completed_vehicles_per_hour,908.000000

@@ -1,0 +1,41 @@
+Predictive validation summary — Scenarios 2-7
+
+1. Scope and success: all six scenarios (2, 3, 4, 5, 6, 7) completed successfully; no scenarios rerun during consolidation.
+2. Source integrity: consolidated files use existing tripinfo, decision logs, and per-scenario analysis outputs only.
+3. Validation checks: 6 scenario checks, 24 decision rows, 6 tripinfo sets, 6 route checks; route warnings = 0.
+4. Scenario metadata table:
+Scenario | Intersection | UTC window | Dataset weather | Rush | Demand
+---|---|---|---|---:|---:
+| Scenario 2 | INT-EXPO-N | 2026-09-13T10:00:00+00:00–2026-09-13T11:00:00+00:00 | light_rain | 0 | 601 |
+| Scenario 3 | INT-RING-01 | 2026-09-14T08:15:00+00:00–2026-09-14T09:15:00+00:00 | clear | 1 | 920 |
+| Scenario 4 | INT-EXPO-S | 2026-09-14T09:00:00+00:00–2026-09-14T10:00:00+00:00 | clear | 1 | 873 |
+| Scenario 5 | INT-EXPO-E | 2026-09-17T05:30:00+00:00–2026-09-17T06:30:00+00:00 | cloudy | 0 | 756 |
+| Scenario 6 | INT-RING-01 | 2026-09-18T07:15:00+00:00–2026-09-18T08:15:00+00:00 | light_rain | 1 | 796 |
+| Scenario 7 | INT-EXPO-N | 2026-09-19T12:00:00+00:00–2026-09-19T13:00:00+00:00 | clear | 0 | 758 |
+
+5. Per-scenario average and P95 table:
+Scenario | Fixed avg travel | Reactive avg travel | Predictive avg travel | Fixed avg wait | Reactive avg wait | Predictive avg wait | Fixed P95 travel | Reactive P95 travel | Predictive P95 travel | Fixed P95 wait | Reactive P95 wait | Predictive P95 wait
+---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:
+| Scenario 2 | 54.194 | 52.443 | 52.603 | 10.630 | 8.782 | 8.861 | 84.000 | 76.450 | 76.000 | 40.000 | 33.000 | 32.000 |
+| Scenario 3 | 55.440 | 52.722 | 52.641 | 11.709 | 9.095 | 9.074 | 85.000 | 77.000 | 76.000 | 40.000 | 32.000 | 31.000 |
+| Scenario 4 | 55.402 | 52.764 | 52.637 | 11.703 | 9.120 | 9.090 | 86.000 | 77.000 | 77.000 | 40.000 | 32.000 | 32.000 |
+| Scenario 5 | 54.662 | 53.038 | 52.901 | 11.093 | 9.425 | 9.299 | 84.800 | 80.000 | 79.000 | 39.000 | 35.000 | 34.000 |
+| Scenario 6 | 55.183 | 53.074 | 52.693 | 11.622 | 9.628 | 9.255 | 85.000 | 83.000 | 79.000 | 40.000 | 37.800 | 34.000 |
+| Scenario 7 | 54.719 | 53.047 | 53.041 | 11.162 | 9.470 | 9.453 | 85.000 | 79.000 | 79.000 | 39.700 | 34.000 | 33.000 |
+
+6. Pooled values:
+Fixed / reactive / predictive completed: 4633 / 4638 / 4638
+Average travel (s): 54.989 / 52.857 / 52.751
+Average wait (s): 11.368 / 9.263 / 9.178
+P95 travel (s): 85.000 / 79.000 / 78.000
+P95 wait (s): 40.000 / 34.000 / 32.000
+7. Fixed-vs-reactive: see reactive_vs_fixed_* difference columns.
+8. Fixed-vs-predictive: see predictive_vs_fixed_* difference columns.
+9. Reactive-vs-predictive: see predictive_vs_reactive_* difference columns.
+10. Predictive improved vs reactive average travel: 3, 4, 5, 6, 7; worsened: 2.
+11. Predictive improved vs reactive average wait: 3, 4, 5, 6, 7; worsened: 2.
+12. P95 comparisons vs reactive — travel improved: 2, 3, 5, 6; worsened: none; wait improved: 2, 3, 5, 6, 7; worsened: none.
+13. Tradeoffs: predictive control changes completion, stops, maxima, and tail percentiles; averages may improve while individual metrics or scenarios worsen.
+14. Warnings and unexpected behavior: no route-order warnings; Scenario 2 selected rows report light_rain (not clear), so the established metadata is labeled light_rain. No unexpected runtime behavior was observed.
+
+Files: predictive_validation_comparison.csv, aggregate_comparison.csv, final_predictive_summary.txt

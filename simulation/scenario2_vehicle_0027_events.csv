@@ -1,0 +1,18 @@
+simulation_time,event_type,details
+0,signal_plan_active,Initial 42s NS / 18s EW plan active
+854.0,vehicle_departure_tripinfo,departure=854.00s
+855,vehicle_departure_observed,Vehicle became present in TraCI
+855,waiting_started,edge=east_in; lane=east_in_0
+856,waiting_ended,edge=east_in; lane=east_in_0
+886,waiting_started,edge=east_in; lane=east_in_0
+900,flowsense_decision_queued,NS=31s; EW=29s
+927,signal_phase_transition_while_waiting,0 (NS green) -> 1 (NS yellow); edge=east_in; lane=east_in_0
+930,signal_phase_transition_while_waiting,1 (NS yellow) -> 2 (all-red (NS to EW)); edge=east_in; lane=east_in_0
+931,waiting_ended,edge=:junction_0_5; lane=:junction_0_5_0
+953,flowsense_plan_applied,NS=31s; EW=29s; selected=NS
+959.0,vehicle_arrival_tripinfo,arrival=959.00s; travel_time=105.00s
+960,vehicle_arrival_observed,Vehicle no longer present in TraCI
+1800,flowsense_decision_queued,NS=28s; EW=32s
+1838,flowsense_plan_applied,NS=28s; EW=32s; selected=EW
+2700,flowsense_decision_queued,NS=33s; EW=27s
+2723,flowsense_plan_applied,NS=33s; EW=27s; selected=NS

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes>
+    <vType id="flowsense_car" accel="2.6" decel="4.5" sigma="0.5" length="5.0" minGap="2.5" maxSpeed="13.89" guiShape="passenger"/>
+
+    <route id="north_to_south" edges="north_in south_out"/>
+    <route id="south_to_north" edges="south_in north_out"/>
+    <route id="east_to_west" edges="east_in west_out"/>
+    <route id="west_to_east" edges="west_in east_out"/>
+
+    <flow id="flow_north_to_south" type="flowsense_car" route="north_to_south" begin="0" end="3600" period="8"/>
+    <flow id="flow_south_to_north" type="flowsense_car" route="south_to_north" begin="0" end="3600" period="8"/>
+    <flow id="flow_east_to_west" type="flowsense_car" route="east_to_west" begin="0" end="3600" period="10"/>
+    <flow id="flow_west_to_east" type="flowsense_car" route="west_to_east" begin="0" end="3600" period="10"/>
+</routes>

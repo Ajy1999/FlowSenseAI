@@ -1,0 +1,5 @@
+simulation_time,dataset_timestamp,ns_pressure,ew_pressure,ns_green_sec,ew_green_sec,yellow_sec,all_red_sec,selected_phase,decision_reason
+0,2026-09-13T10:00:00+00:00,0.7221696075263475,0.32101629060563086,42,18,3,1,NS,NS phase receives more green because NS traffic pressure is higher.
+900,2026-09-13T10:15:00+00:00,0.5102087114337568,0.4649686520376175,31,29,3,1,NS,NS phase receives more green because NS traffic pressure is higher.
+1800,2026-09-13T10:30:00+00:00,0.49999999999999994,0.5533075601374571,28,32,3,1,EW,EW phase receives more green because EW traffic pressure is higher.
+2700,2026-09-13T10:45:00+00:00,0.4972987900210727,0.4206736477783653,33,27,3,1,NS,NS phase receives more green because NS traffic pressure is higher.

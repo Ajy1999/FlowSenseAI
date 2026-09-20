@@ -1,0 +1,16 @@
+***Starting server on port 56286 ***
+Loading net-file from 'C:\Users\aishw\OneDrive\Desktop\FlowSense\simulation\network.net.xml' ... done (5ms).
+Loading route-files incrementally from 'C:\Users\aishw\OneDrive\Desktop\FlowSense\simulation\dataset_routes_scenario2.rou.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 2.28s
+ TraCI-Duration: 1.84s
+ Real time factor: 1577.56
+ UPS: 13752.848379
+Vehicles:
+ Inserted: 601
+ Running: 9
+ Waiting: 0
