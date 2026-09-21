@@ -6,8 +6,6 @@ import csv
 import importlib.util
 import tkinter as tk
 import sys
-import threading
-from queue import Empty, Queue
 from pathlib import Path
 from xml.etree import ElementTree
 
@@ -48,8 +46,13 @@ def load_observations() -> dict[int, pd.DataFrame]:
     return result
 
 
-def publish(panel_queue: Queue, lines: list[str]) -> None:
-    panel_queue.put(("update", lines))
+def safe_update(panel: DemoPanel, lines: list[str]) -> bool:
+    try:
+        panel.update(lines)
+        panel.root.update()
+        return True
+    except tk.TclError:
+        return False
 
 
 def metrics(tripinfo: Path) -> dict[str, float]:
@@ -85,7 +88,6 @@ def main() -> None:
     decisions = OUTPUT / "reactive_presentation_decisions.csv"
     initial = plans[0]
     panel = DemoPanel("FlowSense AI - Reactive", ["FLOWSENSE REACTIVE", "Simulation time: 0000 / 3600 s", f"Vehicles: 0 / {expected}", "Control: Reactive", "NS pressure: 0.00", "EW pressure: 0.00", "NS green allocation: 0 s", "EW green allocation: 0 s", "Current phase: starting", "Decision: CURRENT TRAFFIC", "", "Simulation running..."])
-    panel_queue: Queue = Queue()
     command = [str(SUMO_GUI), "-n", str(NETWORK), "-r", str(ROUTES), "--begin", "0", "--end", str(SIMULATION_END), "--step-length", "1", "--time-to-teleport", "-1", "--tripinfo-output", str(tripinfo), "--log", str(log)]
 
     def apply(traci_connection, plan):
@@ -110,7 +112,7 @@ def main() -> None:
                 visible = plans[now] if now in plans else plans[applied]
                 phase = traci.trafficlight.getPhase(TLS_ID)
                 names = ("NS GREEN", "NS YELLOW", "ALL RED", "EW GREEN", "EW YELLOW", "ALL RED")
-                publish(panel_queue, ["FLOWSENSE REACTIVE", f"Simulation time: {now:04d} / 3600 s", f"Vehicles: {departed} / {expected}", "Control: Reactive", f"NS pressure: {float(visible['ns_pressure']):.2f}", f"EW pressure: {float(visible['ew_pressure']):.2f}", f"NS green allocation: {int(visible['ns_green_sec'])} s", f"EW green allocation: {int(visible['ew_green_sec'])} s", f"Current phase: {names[phase] if phase < len(names) else phase}", "Decision: CURRENT TRAFFIC", "", "Simulation running..."])
+                safe_update(panel, ["FLOWSENSE REACTIVE", f"Simulation time: {now:04d} / 3600 s", f"Vehicles: {departed} / {expected}", "Control: Reactive", f"NS pressure: {float(visible['ns_pressure']):.2f}", f"EW pressure: {float(visible['ew_pressure']):.2f}", f"NS green allocation: {int(visible['ns_green_sec'])} s", f"EW green allocation: {int(visible['ew_green_sec'])} s", f"Current phase: {names[phase] if phase < len(names) else phase}", "Decision: CURRENT TRAFFIC", "", "Simulation running..."])
                 if now in plans and now != applied:
                     pending = plans[now]
                     pending_time = now
@@ -125,41 +127,25 @@ def main() -> None:
                     pending_time = None
                 previous_phase = current_phase
             final_time = traci.simulation.getTime()
-            if traci.isLoaded():
-                traci.close()
-            with decisions.open("w", newline="", encoding="utf-8") as handle:
-                writer = csv.DictWriter(handle, fieldnames=["simulation_time", "ns_pressure", "ew_pressure", "ns_green_sec", "ew_green_sec", "yellow_sec", "all_red_sec", "selected_phase", "decision_reason"])
-                writer.writeheader()
-                writer.writerows(decision_rows)
-            if final_time != SIMULATION_END:
-                raise RuntimeError(f"Reactive demo ended at {final_time}s.")
-            result = metrics(tripinfo)
-            publish(panel_queue, ["FLOWSENSE REACTIVE", f"Simulation complete: {int(final_time)} / 3600 s", f"Completed vehicles: {int(result['completed'])}", "Decision: CURRENT TRAFFIC", "", f"Average travel time: {result['travel']:.3f} s", f"Average waiting time: {result['waiting']:.3f} s", f"95th percentile waiting: {result['p95_waiting']:.3f} s", f"95th percentile travel: {result['p95_travel']:.3f} s", "", "", ""])
-            panel_queue.put(("done", final_time))
-        except Exception as error:
-            panel_queue.put(("error", error))
         finally:
             if traci.isLoaded():
                 traci.close()
 
-    def poll_panel() -> None:
         try:
-            while True:
-                event, payload = panel_queue.get_nowait()
-                if event == "update":
-                    panel.update(payload)
-                elif event == "error":
-                    panel.update(["FLOWSENSE REACTIVE", "Simulation error", str(payload), "", "No validation output was modified."])
-                elif event == "done":
-                    print(f"Reactive demo reached {payload}s; outputs: {OUTPUT}")
-        except Empty:
-            pass
-        panel.root.after(100, poll_panel)
+            if final_time != SIMULATION_END:
+                raise RuntimeError(f"Reactive demo ended at {final_time}s.")
+            with decisions.open("w", newline="", encoding="utf-8") as handle:
+                writer = csv.DictWriter(handle, fieldnames=["simulation_time", "ns_pressure", "ew_pressure", "ns_green_sec", "ew_green_sec", "yellow_sec", "all_red_sec", "selected_phase", "decision_reason"])
+                writer.writeheader()
+                writer.writerows(decision_rows)
+            result = metrics(tripinfo)
+            safe_update(panel, ["FLOWSENSE REACTIVE", f"Simulation complete: {int(final_time)} / 3600 s", f"Completed vehicles: {int(result['completed'])}", "Decision: CURRENT TRAFFIC", "", f"Average travel time: {result['travel']:.3f} s", f"Average waiting time: {result['waiting']:.3f} s", f"95th percentile waiting: {result['p95_waiting']:.3f} s", f"95th percentile travel: {result['p95_travel']:.3f} s", "", "", ""])
+            print(f"Reactive demo reached {final_time}s; outputs: {OUTPUT}")
+        except Exception as error:
+            safe_update(panel, ["FLOWSENSE REACTIVE", "Simulation error", str(error), "", "SUMO/TraCI stopped; no simulation is running."])
+            raise
 
-    worker = threading.Thread(target=run_simulation, name="flowsense-reactive-simulation", daemon=True)
-    worker.start()
-    panel.root.after(100, poll_panel)
-    panel.root.mainloop()
+    run_simulation()
 
 
 if __name__ == "__main__":
