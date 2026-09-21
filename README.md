@@ -1,4 +1,4 @@
-# FlowSense AI: Adaptive Traffic Signal Control
+# FlowSense: Adaptive Traffic Signal Control
 
 **Signals that respond to traffic, not schedules.**
 
