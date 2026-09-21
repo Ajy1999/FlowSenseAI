@@ -1,0 +1,19 @@
+# Data analysis and visualization
+numpy>=1.26
+pandas>=2.2
+matplotlib>=3.8
+seaborn>=0.13
+
+# Machine learning and persisted model loading
+scikit-learn>=1.4
+joblib>=1.3
+
+# API runtime
+fastapi>=0.110
+uvicorn>=0.29
+
+# SUMO/TraCI integration
+traci>=1.20
+
+# Notebook support
+jupyter>=1.0
